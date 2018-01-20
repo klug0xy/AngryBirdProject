@@ -1,9 +1,6 @@
 package main;
 
-public class Character {
-	void checkconlision() {
-	}
+public abstract class Character {
+	
 
-	void addconlision() {
-	};
 }

@@ -3,6 +3,7 @@ package main;
 public class Gravity {
 	
 	public Gravity(){
+		this.setValue(0.1);
 		
 	}
 	

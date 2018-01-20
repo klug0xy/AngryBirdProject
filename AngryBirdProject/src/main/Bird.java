@@ -1,11 +1,19 @@
 package main;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-public class Bird extends Character{
+import javax.imageio.ImageIO;
+
+public class Bird {
+	
+	double birdX, birdY, velocityX, velocityY;
+	Image icon;
 
 	public Bird() {
 		super();
-		
+		this.setIcon("resources/angrybird.png");
 	}
 	
 	public double getBirdX() {
@@ -41,16 +49,18 @@ public class Bird extends Character{
 		this.velocityY = velocityY;
 	}
 
-	double birdX, birdY, velocityX, velocityY;
-	Image img;
-
-
-	public Image getImg() {
-		return img;
+	public Image getIcon() {
+		return icon;
 	}
 
-	public void setImg(Image img) {
-		this.img = img;
+	public void setIcon(String iconPath) {
+		BufferedImage icon = null;
+		try {
+			icon = ImageIO.read(new File(iconPath));
+		} catch (IOException e) {
+			//e.printStackTrace();
+		}
+		this.icon = icon;
 	}
 
 	public Bird(double birdX, double birdY, double velocityX, double velocityY, Image img) {
@@ -59,18 +69,6 @@ public class Bird extends Character{
 		this.birdY = birdY;
 		this.velocityX = velocityX;
 		this.velocityY = velocityY;
-		this.img = img;
+		this.icon = icon;
 	}
-
-	public void add_image(Image img) {
-		this.setImg(img);
-	}
-
-	public void generate_abscisse_ordonne(double birdX, double birdY) {
-		this.setBirdX (birdX);
-		this.setBirdY (birdY);
-	}
-
-	
-
 }

@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -34,10 +35,11 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 	Pig cochon = new Pig();
 	Pig cochon1 = new Pig();
 	Pig cochon2 = new Pig();
-	List<Pig> pigs = null;
 	Bird oiseau = new Bird();
 	int mouseX;
 	int mouseY;
+	ColisionManager colisionManager = new ColisionManager();
+	List<Pig> pigsList = new LinkedList<Pig>();
 
 	public void init() {
 		gameOver = false;
@@ -49,20 +51,26 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 		oiseau.setVelocityY(0);
 		cochon.setPigX(Math.random() * 500 + 200);
 		cochon.setPigY(480);
-		// cochon1.setPigX(Math.random() * 500 + 200);
-		// cochon1.setPigY(480);
-		// cochon2.setPigX(Math.random() * 500 + 200);
-		// cochon2.setPigY(480);
-		// pigs.add(cochon);
-		// pigs.add(cochon2);
-		// pigs.add(cochon1);
-
+		cochon1.setPigX(Math.random() * 500 + 200);
+		cochon1.setPigY(480);
+		cochon2.setPigX(Math.random() * 500 + 200);
+		cochon2.setPigY(480);
+		pigsList.add(cochon);
+		pigsList.add(cochon1);
+		pigsList.add(cochon2);
+		colisionManager.setPigsList(pigsList);
+//		colisionManager.addObject(cochon);
+//		colisionManager.addObject(cochon1);
+//		colisionManager.addObject(cochon2);
+//		colisionManager.addObject(oiseau);
+		
 	}
 
 	void stop() {
 		oiseau.setVelocityX(0);
 		oiseau.setVelocityY(0);
 		gameOver = true;
+
 	}
 
 	ImageObserver modalComp = null;
@@ -90,27 +98,24 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 			g.drawLine((int) oiseau.getBirdX(), (int) oiseau.getBirdY(), mouseX, mouseY);
 		
 		// montre l'angle et la vitesse
-		BufferedImage angrybird = null;
-		try {
-			angrybird = ImageIO.read(new File("resources/angrybird.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
-		g.drawImage(angrybird, (int) oiseau.getBirdX() - 20, (int) oiseau.getBirdY() - 20, 40, 40, modalComp);
-
-		// cochon
-		BufferedImage pig = null;
-		try {
-			pig = ImageIO.read(new File("resources/pig2"));
-		} catch (IOException e) {
-			e.printStackTrace();
+		g.drawImage(oiseau.getIcon(), (int) oiseau.getBirdX() - 20, (int) oiseau.getBirdY() - 20, 40, 40, modalComp);
+		
+		for (int i = 0;i<colisionManager.getPigsList().size();i++){
+			
+			//System.out.println(colisionManager.getPigsList().get(i));
+			
+			g.drawImage(colisionManager.getPigsList().get(i).getIcon(), (int) colisionManager.getPigsList().get(i).getPigX() - 20, (int) colisionManager.getPigsList().get(i).getPigY() - 20, 40, 40, modalComp);
+			
 		}
-		g.drawImage(pig, (int) cochon.getPigX() - 20, (int) cochon.getPigY() - 20, 40, 40, modalComp);
-		// g.drawImage( pig, (int) cochon1.getPigX() - 20, (int)
-		// cochon.getPigY() - 20, 40, 40, modalComp);
-		// g.drawImage( pig, (int) cochon2.getPigX() - 20, (int)
-		// cochon.getPigY() - 20, 40, 40, modalComp);
+		
+//		g.drawImage(cochon.getIcon(), (int) cochon.getPigX() - 20, (int) cochon.getPigY() - 20, 40, 40, modalComp);
+//		
+//		g.drawImage( cochon1.getIcon(), (int) cochon1.getPigX() - 20, (int)
+//		cochon1.getPigY() - 20, 40, 40, modalComp);
+//		
+//		g.drawImage( cochon2.getIcon(), (int) cochon2.getPigX() - 20, (int)
+//		cochon2.getPigY() - 20, 40, 40, modalComp);
 
 		// messages
 		g.setColor(Color.BLACK);
@@ -214,12 +219,11 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (gameOver) {
+			pigsList.clear();
 			init();
 		} else if (selecting) {
 			oiseau.setVelocityX((oiseau.getBirdX() - mouseX) / 20.0);
 			oiseau.setVelocityY((oiseau.getBirdY() - mouseY) / 20.0);
-			System.out.println(oiseau.getVelocityX());
-			System.out.println(oiseau.getVelocityY());
 			message = "L'oiseau prend sont envol";
 			selecting = false;
 		}
@@ -239,15 +243,35 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 
 	}
 
-	public void setPicPig() {
-		g = (Graphics2D) buffer.getGraphics();
-		BufferedImage pig = null;
-		try {
-			pig = ImageIO.read(new File("resources/angrypig.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		g.drawImage(pig, (int) cochon.getPigX() - 20, (int) cochon.getPigY() - 20, 40, 40, modalComp);
+	public Pig getCochon1() {
+		return cochon1;
 	}
 
+	public void setCochon1(Pig cochon1) {
+		this.cochon1 = cochon1;
+	}
+
+	public Pig getCochon2() {
+		return cochon2;
+	}
+
+	public void setCochon2(Pig cochon2) {
+		this.cochon2 = cochon2;
+	}
+
+	public ColisionManager getColisionManager() {
+		return colisionManager;
+	}
+
+	public void setColisionManager(ColisionManager colisionManager) {
+		this.colisionManager = colisionManager;
+	}
+
+	public List<Pig> getPigsList() {
+		return pigsList;
+	}
+
+	public void setPigsList(List<Pig> pigsList) {
+		this.pigsList = pigsList;
+	}
 }
