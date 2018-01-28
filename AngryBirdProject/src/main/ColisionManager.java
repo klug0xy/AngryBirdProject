@@ -5,61 +5,45 @@ import java.util.List;
 
 public class ColisionManager {
 	
-	List<Bird> birdsList = new LinkedList<Bird>();
-	List<Pig> pigsList = new LinkedList<Pig>();
+	private List<Objectt> objectList = new LinkedList<Objectt>();
 
-	public ColisionManager() {
-	}
+	public ColisionManager() {}
 
 	// calcule la distance entre deux points
-	double distance(double x1, double y1, double x2, double y2) {
+	private double distance(double x1, double y1, double x2, double y2) {
 		double dx = x1 - x2;
 		double dy = y1 - y2;
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 	
-	boolean checkColision(Bird bird, Pig pig) {
+	public boolean checkColision(Objectt object1, Objectt object2) {
 		boolean colision = false;
-		if (this.distance(bird.getBirdX(), bird.
-				getBirdY(), pig.getPigX(), 
-				pig.getPigY()) < 35) {colision = true;}
+		if (this.distance(object1.getX(), object1.
+				getY(), object2.getX(), 
+				object2.getY()) < 35) {colision = true;}
 		
 		return colision;
 		
 	}
 	
-	void onColision(Bird bird, Pig pig, int pigIndex) {
+	public void onColision(Objectt object1, Objectt object2/*, int pigIndex*/) {
 		
-		bird.setIcon("resources/birdlaugh.png");
-		pig.setIcon("resources/angrypig.png");
+		object1.setIcon("resources/birdlaugh.png");
+		object2.setIcon("resources/angrypig.png");
 		//pigsList.remove(pigIndex);
 	}
 	
-	void addObject(Object object){
-		if (object instanceof Bird){
-			Bird bird = (Bird) object;
-			birdsList.add(bird);
-		}
-		else if (object instanceof Pig){
-			Pig pig = (Pig) object;
-			pigsList.add(pig);
-		}
+	public void addObject(Objectt object){
+	
+			objectList.add(object);
 	}
 
-	public List<Bird> getBirdsList() {
-		return birdsList;
+	public List<Objectt> getObjectList() {
+		return objectList;
 	}
 
-	public void setBirdsList(List<Bird> birdsList) {
-		this.birdsList = birdsList;
-	}
-
-	public List<Pig> getPigsList() {
-		return pigsList;
-	}
-
-	public void setPigsList(List<Pig> pigsList) {
-		this.pigsList = pigsList;
+	public void setObjectList(List<Objectt> objectList) {
+		this.objectList = objectList;
 	}
 
 }

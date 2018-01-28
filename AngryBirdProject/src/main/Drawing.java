@@ -32,37 +32,42 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 	String message;
 	int score;
 	Image buffer;
-	Pig cochon = new Pig();
-	Pig cochon1 = new Pig();
-	Pig cochon2 = new Pig();
-	Bird oiseau = new Bird();
-	int mouseX;
-	int mouseY;
+	
+	private ObjectFactory objectFactory = new ObjectFactory();
+	private Objectt oiseau = objectFactory.getObject("Bird");
+	private Objectt cochon = objectFactory.getObject("Pig");
+	private Objectt cochon1 = objectFactory.getObject("Pig");
+	private Objectt cochon2 = objectFactory.getObject("Pig");
+	private Objectt trou = objectFactory.getObject("BlackHole");
+	
+	private int mouseX;
+	private int mouseY;
+	
 	ColisionManager colisionManager = new ColisionManager();
-	List<Pig> pigsList = new LinkedList<Pig>();
+	List<Objectt> objectList = new LinkedList<Objectt>();
 
 	public void init() {
 		gameOver = false;
 		selecting = true;
 		message = "Choisissez l'angle et la vitesse.";
-		oiseau.setBirdX(100);
-		oiseau.setBirdY(400);
+		oiseau.setX(100);
+		oiseau.setY(400);
 		oiseau.setVelocityX(0);
 		oiseau.setVelocityY(0);
-		cochon.setPigX(Math.random() * 500 + 200);
-		cochon.setPigY(480);
-		cochon1.setPigX(Math.random() * 500 + 200);
-		cochon1.setPigY(480);
-		cochon2.setPigX(Math.random() * 500 + 200);
-		cochon2.setPigY(480);
-		pigsList.add(cochon);
-		pigsList.add(cochon1);
-		pigsList.add(cochon2);
-		colisionManager.setPigsList(pigsList);
-//		colisionManager.addObject(cochon);
-//		colisionManager.addObject(cochon1);
-//		colisionManager.addObject(cochon2);
-//		colisionManager.addObject(oiseau);
+		cochon.setX(Math.random() * 500 + 200);
+		cochon.setY(480);
+		cochon1.setX(Math.random() * 500 + 200);
+		cochon1.setY(480);
+		cochon2.setX(Math.random() * 500 + 200);
+		cochon2.setY(480);
+		trou.setX(Math.random()* 500);
+		trou.setY(Math.random()* 500);
+
+		colisionManager.addObject(cochon);
+		colisionManager.addObject(cochon1);
+		colisionManager.addObject(cochon2);
+		colisionManager.addObject(oiseau);
+		colisionManager.addObject(trou);
 		
 	}
 
@@ -70,7 +75,6 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 		oiseau.setVelocityX(0);
 		oiseau.setVelocityY(0);
 		gameOver = true;
-
 	}
 
 	ImageObserver modalComp = null;
@@ -95,21 +99,26 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 
 		// oiseau
 		if (selecting)
-			g.drawLine((int) oiseau.getBirdX(), (int) oiseau.getBirdY(), mouseX, mouseY);
+			g.drawLine((int) oiseau.getX(), (int) oiseau.getY(),
+					mouseX, mouseY);
 		
 		// montre l'angle et la vitesse
 
-		g.drawImage(oiseau.getIcon(), (int) oiseau.getBirdX() - 20, (int) oiseau.getBirdY() - 20, 40, 40, modalComp);
+//		g.drawImage(oiseau.getIcon(), (int) oiseau.getX() - 20,
+//				(int) oiseau.getY() - 20, 40, 40, modalComp);
 		
-		for (int i = 0;i<colisionManager.getPigsList().size();i++){
+		for (int i = 0;i<colisionManager.getObjectList().size();i++){
 			
 			//System.out.println(colisionManager.getPigsList().get(i));
 			
-			g.drawImage(colisionManager.getPigsList().get(i).getIcon(), (int) colisionManager.getPigsList().get(i).getPigX() - 20, (int) colisionManager.getPigsList().get(i).getPigY() - 20, 40, 40, modalComp);
-			
+			g.drawImage(colisionManager.getObjectList().get(i).getIcon(), 
+					(int) colisionManager.getObjectList().get(i).getX() - 20, 
+					(int) colisionManager.getObjectList().get(i).getY() - 20, 40,
+					40, modalComp);
 		}
 		
-//		g.drawImage(cochon.getIcon(), (int) cochon.getPigX() - 20, (int) cochon.getPigY() - 20, 40, 40, modalComp);
+//		g.drawImage(cochon.getIcon(), (int) cochon.getPigX() - 20, (int) 
+//		cochon.getPigY() - 20, 40, 40, modalComp);
 //		
 //		g.drawImage( cochon1.getIcon(), (int) cochon1.getPigX() - 20, (int)
 //		cochon1.getPigY() - 20, 40, 40, modalComp);
@@ -142,19 +151,19 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 		this.buffer = buffer;
 	}
 
-	public Pig getCochon() {
+	public Objectt getCochon() {
 		return cochon;
 	}
 
-	public void setCochon(Pig cochon) {
+	public void setCochon(Objectt cochon) {
 		this.cochon = cochon;
 	}
 
-	public Bird getOiseau() {
+	public Objectt getOiseau() {
 		return oiseau;
 	}
 
-	public void setOiseau(Bird oiseau) {
+	public void setOiseau(Objectt oiseau) {
 		this.oiseau = oiseau;
 	}
 
@@ -205,25 +214,19 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
+	public void mouseClicked(MouseEvent e) {}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
+	public void mousePressed(MouseEvent e) {}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (gameOver) {
-			pigsList.clear();
+			objectList.clear();
 			init();
 		} else if (selecting) {
-			oiseau.setVelocityX((oiseau.getBirdX() - mouseX) / 20.0);
-			oiseau.setVelocityY((oiseau.getBirdY() - mouseY) / 20.0);
+			oiseau.setVelocityX((oiseau.getX() - mouseX) / 20.0);
+			oiseau.setVelocityY((oiseau.getY() - mouseY) / 20.0);
 			message = "L'oiseau prend sont envol";
 			selecting = false;
 		}
@@ -232,18 +235,12 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
+	public void mouseEntered(MouseEvent e) {}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
+	public void mouseExited(MouseEvent e) {}
 
-	}
-
-	public Pig getCochon1() {
+	public Objectt getCochon1() {
 		return cochon1;
 	}
 
@@ -251,7 +248,7 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 		this.cochon1 = cochon1;
 	}
 
-	public Pig getCochon2() {
+	public Objectt getCochon2() {
 		return cochon2;
 	}
 
@@ -267,11 +264,11 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 		this.colisionManager = colisionManager;
 	}
 
-	public List<Pig> getPigsList() {
-		return pigsList;
+	public List<Objectt> getObjectList() {
+		return objectList;
 	}
 
-	public void setPigsList(List<Pig> pigsList) {
-		this.pigsList = pigsList;
+	public void setObjectList(List<Objectt> objectList) {
+		this.objectList = objectList;
 	}
 }
