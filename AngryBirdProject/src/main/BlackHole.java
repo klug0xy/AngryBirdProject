@@ -6,7 +6,4 @@ public class BlackHole extends Objectt {
 		super();
 		this.setIcon("resources/trou.png");
 	}
-	
-	
-
 }

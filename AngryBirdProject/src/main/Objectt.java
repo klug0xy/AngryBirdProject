@@ -1,11 +1,7 @@
 package main;
 
 import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
+import java.awt.Toolkit;
 
 public abstract class Objectt {
 	
@@ -32,12 +28,11 @@ public abstract class Objectt {
 	}
 	public void setIcon(String iconPath) {
 		
-		BufferedImage icon = null;
-		try {
-			icon = ImageIO.read(new File(iconPath));
-		} catch (IOException e) {
-			//e.printStackTrace();
-		}
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		
+		icon = kit.getImage(iconPath);
+		//icon = icon.getScaledInstance(128, 128, Image.SCALE_SMOOTH);
+		
 		this.icon = icon;
 	}
 	public double getVelocityX() {

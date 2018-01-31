@@ -20,18 +20,16 @@ import javax.imageio.ImageIO;
 
 public class Drawing extends Panel implements MouseListener, MouseMotionListener {
 
-	public Drawing() {
-		super();
-		addMouseListener(this);
-		addMouseMotionListener(this);
-		init();
-	}
-
-	boolean gameOver;
-	boolean selecting;
-	String message;
-	int score;
-	Image buffer;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1581971367482451338L;
+	
+	private boolean gameOver;
+	private boolean selecting;
+	private String message;
+	private int score;
+	private Image buffer;
 	
 	private ObjectFactory objectFactory = new ObjectFactory();
 	private Objectt oiseau = objectFactory.getObject("Bird");
@@ -40,11 +38,21 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 	private Objectt cochon2 = objectFactory.getObject("Pig");
 	private Objectt trou = objectFactory.getObject("BlackHole");
 	
+	private ImageObserver modalComp = null;
+	private Graphics2D g;
+	
 	private int mouseX;
 	private int mouseY;
 	
-	ColisionManager colisionManager = new ColisionManager();
-	List<Objectt> objectList = new LinkedList<Objectt>();
+	private ColisionManager colisionManager = new ColisionManager();
+	private List<Objectt> objectList = new LinkedList<Objectt>();
+
+	public Drawing() {
+		super();
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		init();
+	}
 
 	public void init() {
 		gameOver = false;
@@ -63,11 +71,13 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 		trou.setX(Math.random()* 500);
 		trou.setY(Math.random()* 500);
 
-		colisionManager.addObject(cochon);
-		colisionManager.addObject(cochon1);
-		colisionManager.addObject(cochon2);
-		colisionManager.addObject(oiseau);
-		colisionManager.addObject(trou);
+		objectList.add(oiseau);
+		objectList.add(trou);
+		objectList.add(cochon);
+		objectList.add(cochon1);
+		objectList.add(cochon2);
+		
+		colisionManager.setObjectList(objectList);
 		
 	}
 
@@ -76,9 +86,6 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 		oiseau.setVelocityY(0);
 		gameOver = true;
 	}
-
-	ImageObserver modalComp = null;
-	Graphics2D g;
 
 	public void paint(Graphics g2) {
 
@@ -103,28 +110,15 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 					mouseX, mouseY);
 		
 		// montre l'angle et la vitesse
-
-//		g.drawImage(oiseau.getIcon(), (int) oiseau.getX() - 20,
-//				(int) oiseau.getY() - 20, 40, 40, modalComp);
 		
+		//affichage des objets dans la liste
 		for (int i = 0;i<colisionManager.getObjectList().size();i++){
-			
-			//System.out.println(colisionManager.getPigsList().get(i));
 			
 			g.drawImage(colisionManager.getObjectList().get(i).getIcon(), 
 					(int) colisionManager.getObjectList().get(i).getX() - 20, 
 					(int) colisionManager.getObjectList().get(i).getY() - 20, 40,
 					40, modalComp);
 		}
-		
-//		g.drawImage(cochon.getIcon(), (int) cochon.getPigX() - 20, (int) 
-//		cochon.getPigY() - 20, 40, 40, modalComp);
-//		
-//		g.drawImage( cochon1.getIcon(), (int) cochon1.getPigX() - 20, (int)
-//		cochon1.getPigY() - 20, 40, 40, modalComp);
-//		
-//		g.drawImage( cochon2.getIcon(), (int) cochon2.getPigX() - 20, (int)
-//		cochon2.getPigY() - 20, 40, 40, modalComp);
 
 		// messages
 		g.setColor(Color.BLACK);

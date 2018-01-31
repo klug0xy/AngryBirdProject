@@ -26,11 +26,59 @@ public class ColisionManager {
 		
 	}
 	
-	public void onColision(Objectt object1, Objectt object2/*, int pigIndex*/) {
+	public int typeColision (Objectt object1, Objectt object2) {
+		int type = 0;
 		
-		object1.setIcon("resources/birdlaugh.png");
-		object2.setIcon("resources/angrypig.png");
-		//pigsList.remove(pigIndex);
+		if ( (object1 instanceof Bird && object2 instanceof Pig) 
+			|| (object1 instanceof Pig && object2 instanceof Bird ) ) {
+			type = 1;
+		}
+		else if ( (object1 instanceof Bird && object2 instanceof BlackHole) 
+			|| (object1 instanceof BlackHole && object2 instanceof Bird ) ){
+			type = 2;
+		}
+		return type;
+	}
+	
+	// 1 = oiseau*cochon
+	// 2 = oiseau*trou
+	public int detectColision(List<Objectt> objectList) {
+		int result = 0;
+		for (int i = 0 ; i < objectList.size() - 1 ; i++ ) {
+			for (int j = i+1 ; j < objectList.size() ; j++) {
+				if (checkColision(objectList.get(i), objectList.get(j))) {
+					result = typeColision(objectList.get(i), objectList.get(j));
+					onColision(objectList.get(i), objectList.get(j), result);
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	public void onColision(Objectt object1, Objectt object2 , int typeColision ) {
+		
+		if (typeColision == 1) {
+			if ( object1 instanceof Bird) {
+				object1.setIcon("resources/birdlaugh.png");
+				object2.setIcon("resources/angrypig.png");
+			}
+			else {
+				object1.setIcon("resources/angrypig.png");
+				object2.setIcon("resources/birdlaugh.png");
+			}
+		}
+		
+		else if (typeColision == 2) {
+			if ( object1 instanceof Bird) {
+				object1.setIcon("resources/slowbird.png");
+				object1.setVelocityX(0);
+			}
+			else { 
+				object2.setIcon("resources/slowbird.png");
+				object2.setVelocityX(0);
+			}
+		}
 	}
 	
 	public void addObject(Objectt object){
