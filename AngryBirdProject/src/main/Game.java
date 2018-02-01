@@ -11,13 +11,21 @@ public class Game implements Runnable {
 	private int score;
 	private Gravity gravity = new Gravity();
 	private ColisionManager colisionManager = draw.getColisionManager();
+	private static Game game = null;
 
 	// constructeur
-	Game() {
+	Game(){
 		draw.setScore(0);
 		init();
 		new Thread(this).start();
 	}
+	private static Game getInstance( ) {
+		if(game == null) {
+			game = new Game();
+	      }
+	      return game;
+	}
+	
 
 	// début de partie
 	public void init() {}
@@ -86,7 +94,7 @@ public class Game implements Runnable {
 	// met le jeu dans une fenêtre
 	public static void main(String args[]) {
 		Frame frame = new Frame("Oiseau pas content");
-		final Game theGame = new Game();
+		final Game theGame = Game.getInstance();
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent event) {
 				System.exit(0);
