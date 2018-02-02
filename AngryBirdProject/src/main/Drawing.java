@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -47,6 +48,7 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 	private ColisionManager colisionManager = new ColisionManager();
 	private List<Objectt> objectList = new LinkedList<Objectt>();
 
+
 	public Drawing() {
 		super();
 		addMouseListener(this);
@@ -68,8 +70,8 @@ public class Drawing extends Panel implements MouseListener, MouseMotionListener
 		cochon1.setY(480);
 		cochon2.setX(Math.random() * 500 + 200);
 		cochon2.setY(480);
-		trou.setX(Math.random()* 500);
-		trou.setY(Math.random()* 500);
+		trou.setX(Math.random() * 500 + 200);
+		trou.setY(Math.random() * 200 + 200);
 
 		objectList.add(oiseau);
 		objectList.add(trou);
