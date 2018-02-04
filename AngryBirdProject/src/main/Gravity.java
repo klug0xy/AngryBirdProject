@@ -7,7 +7,7 @@ public class Gravity {
 		
 	}
 	
-	public double value;
+	private double value;
 
 	public double getValue() {
 		return value;

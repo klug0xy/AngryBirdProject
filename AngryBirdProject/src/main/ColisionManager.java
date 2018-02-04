@@ -80,11 +80,6 @@ public class ColisionManager {
 			}
 		}
 	}
-	
-	public void addObject(Objectt object){
-	
-			objectList.add(object);
-	}
 
 	public List<Objectt> getObjectList() {
 		return objectList;
