@@ -2,11 +2,13 @@ package main;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class ColisionManager {
+public class ColisionManager implements Observer{
 	
 	private List<Objectt> objectList = new LinkedList<Objectt>();
-
+	Objectt obj;
 	public ColisionManager() {}
 
 	// calcule la distance entre deux points
@@ -58,6 +60,7 @@ public class ColisionManager {
 	
 	public void onColision(Objectt object1, Objectt object2 , int typeColision ) {
 		
+		ColisionManager observer = new ColisionManager();
 		if (typeColision == 1) {
 			if ( object1 instanceof Bird) {
 				object1.setIcon("resources/birdlaugh.png");
@@ -72,7 +75,10 @@ public class ColisionManager {
 		else if (typeColision == 2) {
 			if ( object1 instanceof Bird) {
 				object1.setIcon("resources/slowbird.png");
+				object1.addObserver(observer);
 				object1.setVelocityX(0);
+				
+
 			}
 			else { 
 				object2.setIcon("resources/slowbird.png");
@@ -87,6 +93,12 @@ public class ColisionManager {
 
 	public void setObjectList(List<Objectt> objectList) {
 		this.objectList = objectList;
+	}
+
+	@Override
+	public void update(Observable observable, Object arg1) {
+		obj = (Objectt) observable;
+		 System.out.println("VelocityX Report Live. Its "+obj.getVelocityX());
 	}
 
 }
